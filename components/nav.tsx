@@ -158,7 +158,33 @@ export const Navigation = () => {
 
               <div className='py-6'>
                 {userProfile ? (
-                  <div>{userProfile.profile?.last}</div>
+                  <div className='flex justify-around items-center'>
+                    <Avatar className='cursor-pointer'>
+                      <AvatarImage src='' alt='icon' className='' />
+                      <AvatarFallback>
+                        {userProfile.profile?.last}
+                      </AvatarFallback>
+                    </Avatar>
+
+                    <Button
+                      variant={'secondary'}
+                      size={'sm'}
+                      disabled={isSigningOut}
+                      onClick={async () => {
+                        setSigningOut(true)
+                        await auth.signOut()
+                        setSigningOut(false)
+                      }}
+                      className=''
+                    >
+                      {isSigningOut ? (
+                        <CgSpinnerAlt className='animate-spin' />
+                      ) : (
+                        <IoExitOutline />
+                      )}
+                      退出登录
+                    </Button>
+                  </div>
                 ) : (
                   <Button
                     onClick={() => {
