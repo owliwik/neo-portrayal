@@ -13,6 +13,7 @@ import { IoExitOutline } from 'react-icons/io5'
 import { Separator } from './ui/separator'
 import { auth } from '@/lib/supabase/client'
 import { CgSpinnerAlt } from 'react-icons/cg'
+import Link from 'next/link'
 
 const navigation = [
   { name: '资源', href: '#' },
@@ -25,6 +26,7 @@ export const Navigation = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [loginOpen, setLoginOpen] = useState(false)
   const [isSigningOut, setSigningOut] = useState(false)
+
   const userProfile = useUser()
 
   return (
@@ -33,10 +35,10 @@ export const Navigation = () => {
 
       <nav className='flex items-center justify-between px-20 py-4'>
         <div className='flex md:flex-1'>
-          <a href='/' className='-m-1.5 p-1.5'>
+          <Link href='/' className='-m-1.5 p-1.5'>
             <span className='sr-only'>Your Company</span>
             <img alt='' src='/icportrayal.png' className='h-10 w-auto' />
-          </a>
+          </Link>
         </div>
 
         <div className='flex md:hidden'>
@@ -52,13 +54,13 @@ export const Navigation = () => {
 
         <div className='hidden md:flex md:gap-x-12'>
           {navigation.map((item) => (
-            <a
+            <Link
               key={item.name}
               href={item.href}
               className='text-md font-semibold text-gray-900'
             >
               {item.name}
-            </a>
+            </Link>
           ))}
         </div>
         <div className='hidden md:flex md:flex-1 md:justify-end'>
@@ -125,14 +127,14 @@ export const Navigation = () => {
         <div className='fixed inset-0 z-50' />
         <DialogPanel className='fixed inset-y-0 right-0 z-50 w-full bg-background overflow-y-auto px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10'>
           <div className='flex items-center justify-between'>
-            <a href='/' className='-m-1.5 p-1.5'>
+            <Link href='/' className='-m-1.5 p-1.5'>
               <span className='sr-only'>Your Company</span>
               <img
                 alt=''
                 src='https://tailwindui.com/plus/img/logos/mark.svg?color=indigo&shade=600'
                 className='h-10 w-auto'
               />
-            </a>
+            </Link>
             <button
               type='button'
               onClick={() => setMobileMenuOpen(false)}

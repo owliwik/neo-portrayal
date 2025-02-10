@@ -1,17 +1,6 @@
-import { QueryData } from '@supabase/supabase-js'
 import { ClubGrid } from './club-grid'
-import { supabase } from '@/lib/supabase/server'
-import { ArrayElement } from '@/lib/utils'
-
-const clubsQuery = supabase
-  .from('clubs')
-  .select('*, leaders:clubs_leaders(profile:profiles(*))')
-
-export type Club = ArrayElement<QueryData<typeof clubsQuery>>
 
 export default async function Page() {
-  const { data: clubsData } = await clubsQuery
-
   return (
     <div className=''>
       <div className='px-6 pt-36 pb-16 lg:px-8'>
@@ -28,13 +17,9 @@ export default async function Page() {
         </div>
       </div>
 
-      {clubsData ? (
-        <div className='flex justify-center'>
-          <ClubGrid clubs={clubsData} />
-        </div>
-      ) : (
-        <div>No clubs found</div>
-      )}
+      <div className='flex justify-center'>
+        <ClubGrid />
+      </div>
     </div>
   )
 }

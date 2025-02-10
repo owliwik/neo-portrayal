@@ -1,9 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { supabase } from '@/lib/supabase/server'
+import { createServerClient } from '@/lib/supabase/server'
 import { clubEditSchema } from '@/lib/schema/club-edit'
 
 export const POST = async (req: NextRequest) => {
-  const body = await req.json()
+  let body
+  try {
+    body = await req.json()
+  } catch (parseError) {
+    return NextResponse.json(parseError)
+  }
+
+  const supabase = await createServerClient()
 
   const { data: editedClub, error: parseError } = clubEditSchema.safeParse(body)
   if (parseError) {

@@ -1,6 +1,7 @@
 'use client'
 
 import { Button } from '@/components/ui/button'
+import Link from 'next/link'
 
 export default function Page() {
   return (
@@ -36,12 +37,12 @@ export default function Page() {
               崭新的 IC Portrayal 集成了校园工具、校友平台、社团区一连串的功能，快来四处转转吧！
             </p>
             <div className='mt-14 flex items-center justify-center gap-x-6'>
-              <a href='/404'>
+              <Link href='/register'>
                 <Button className='button button-primary'>加入我们</Button>
-              </a>
-              <a href='#' className='link'>
+              </Link>
+              <Link href='/clubs' className='link'>
                 社团页 <span aria-hidden='true'>→</span>
-              </a>
+              </Link>
             </div>
           </div>
         </div>
