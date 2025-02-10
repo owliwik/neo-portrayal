@@ -3,7 +3,7 @@ import { createServerClient } from '@/lib/supabase/server'
 
 export const POST = async (
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) => {
   let columns: string[]
   try {
