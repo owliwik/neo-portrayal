@@ -1,10 +1,15 @@
 'use client'
 
+import { credentialsSchema, Credentials } from '@/lib/schema/auth'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { auth } from '@/lib/supabase/client'
+
 import { Dialog, DialogTitle, DialogContent } from '@/components/ui/dialog'
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden'
-import { ExclamationTriangleIcon } from '@heroicons/react/24/outline'
 import { Button } from './ui/button'
 import { Input } from './ui/input'
+import { CgSpinnerAlt } from 'react-icons/cg'
 
 interface LoginPopupProps {
   open: boolean
@@ -12,6 +17,28 @@ interface LoginPopupProps {
 }
 
 export const LoginPopup = ({ open, setOpen }: LoginPopupProps) => {
+  const {
+    register,
+    handleSubmit,
+    formState: { isSubmitting },
+  } = useForm<Credentials>({
+    resolver: zodResolver(credentialsSchema),
+  })
+
+  const onSubmit = async (cred: Credentials) => {
+    const {
+      data: { session, user },
+      error,
+    } = await auth.signInWithPassword(cred)
+
+    if (error) {
+      console.log(error)
+      return
+    }
+
+    setOpen(false)
+  }
+
   return (
     <Dialog open={open} onOpenChange={() => setOpen((prev) => !prev)}>
       <VisuallyHidden>
@@ -21,8 +48,8 @@ export const LoginPopup = ({ open, setOpen }: LoginPopupProps) => {
       <DialogContent className='w-[20rem] sm:w-[24rem] py-12 px-6 sm:px-12'>
         <div className='mx-auto'>
           <img
-            alt='Your Company'
-            src='https://tailwindui.com/plus/img/logos/mark.svg?color=indigo&shade=600'
+            alt='IC Portrayal Logo'
+            src='/icportrayal.png'
             className='mx-auto h-10 w-auto'
           />
           <h2 className='mt-4 sm:mb-2 text-center text-2xl/9 font-bold tracking-tight text-gray-900'>
@@ -30,7 +57,7 @@ export const LoginPopup = ({ open, setOpen }: LoginPopupProps) => {
           </h2>
         </div>
 
-        <form action='#' method='POST' className='mt-2 space-y-6'>
+        <form onSubmit={handleSubmit(onSubmit)} className='mt-2 space-y-6'>
           <div>
             <label
               htmlFor='email'
@@ -39,14 +66,7 @@ export const LoginPopup = ({ open, setOpen }: LoginPopupProps) => {
               邮箱
             </label>
             <div className='mt-2'>
-              <Input
-                id='email'
-                name='email'
-                type='email'
-                required
-                autoComplete='email'
-                className='input'
-              />
+              <Input {...register('email')} className='' />
             </div>
           </div>
 
@@ -65,20 +85,17 @@ export const LoginPopup = ({ open, setOpen }: LoginPopupProps) => {
               </div>
             </div>
             <div className='mt-2'>
-              <Input
-                id='password'
-                name='password'
-                type='password'
-                required
-                autoComplete='current-password'
-                className='input'
-              />
+              <Input {...register('password')} type='password' className='' />
             </div>
           </div>
 
           <div>
-            <Button type='submit' className='button button-primary w-full'>
-              登入 &rarr;
+            <Button type='submit' disabled={isSubmitting} className='w-full'>
+              {isSubmitting ? (
+                <CgSpinnerAlt className='animate-spin' />
+              ) : (
+                <div>登入 &rarr;</div>
+              )}
             </Button>
           </div>
         </form>

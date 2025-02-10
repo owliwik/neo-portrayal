@@ -1,10 +1,18 @@
 'use client'
 
 import { useState } from 'react'
+import { useUser } from '@/lib/hooks/use-user'
+
 import { Dialog, DialogPanel } from '@headlessui/react'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import { LoginPopup } from './login'
 import { Button } from './ui/button'
+import { Avatar, AvatarImage, AvatarFallback } from './ui/avatar'
+import { HoverCard, HoverCardContent, HoverCardTrigger } from './ui/hover-card'
+import { IoExitOutline } from 'react-icons/io5'
+import { Separator } from './ui/separator'
+import { auth } from '@/lib/supabase/client'
+import { CgSpinnerAlt } from 'react-icons/cg'
 
 const navigation = [
   { name: '资源', href: '#' },
@@ -16,22 +24,21 @@ const navigation = [
 export const Navigation = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [loginOpen, setLoginOpen] = useState(false)
+  const [isSigningOut, setSigningOut] = useState(false)
+  const userProfile = useUser()
 
   return (
     <header className='absolute inset-x-0 top-0 z-50'>
       <LoginPopup open={loginOpen} setOpen={setLoginOpen} />
 
-      <nav className='flex items-center justify-between px-12 py-4'>
+      <nav className='flex items-center justify-between px-20 py-4'>
         <div className='flex md:flex-1'>
           <a href='/' className='-m-1.5 p-1.5'>
             <span className='sr-only'>Your Company</span>
-            <img
-              alt=''
-              src='https://tailwindui.com/plus/img/logos/mark.svg?color=indigo&shade=600'
-              className='h-8 w-auto'
-            />
+            <img alt='' src='/icportrayal.png' className='h-10 w-auto' />
           </a>
         </div>
+
         <div className='flex md:hidden'>
           <button
             type='button'
@@ -42,6 +49,7 @@ export const Navigation = () => {
             <Bars3Icon aria-hidden='true' className='size-6' />
           </button>
         </div>
+
         <div className='hidden md:flex md:gap-x-12'>
           {navigation.map((item) => (
             <a
@@ -54,13 +62,58 @@ export const Navigation = () => {
           ))}
         </div>
         <div className='hidden md:flex md:flex-1 md:justify-end'>
-          <Button
-            variant={'secondary'}
-            className=''
-            onClick={() => setLoginOpen(true)}
-          >
-            登入<span aria-hidden='true'>&rarr;</span>
-          </Button>
+          {userProfile ? (
+            <HoverCard openDelay={100} closeDelay={100}>
+              <HoverCardTrigger>
+                <Avatar className='cursor-pointer'>
+                  <AvatarImage src='' alt='icon' className='' />
+                  <AvatarFallback>{userProfile.profile?.last}</AvatarFallback>
+                </Avatar>
+              </HoverCardTrigger>
+
+              <HoverCardContent
+                align='end'
+                className='w-fit h-fit p-1 flex flex-col gap-1'
+              >
+                <div className='m-2'>
+                  以
+                  <span className='font-bold'>
+                    {' '}
+                    {userProfile.profile?.last}
+                    {userProfile.profile?.first}{' '}
+                  </span>
+                  的身份登入
+                </div>
+                <Separator />
+                <Button
+                  variant={'ghost'}
+                  size={'sm'}
+                  disabled={isSigningOut}
+                  onClick={async () => {
+                    setSigningOut(true)
+                    await auth.signOut()
+                    setSigningOut(false)
+                  }}
+                  className='text-secondary-foreground/80 hover:text-secondary-foreground hover:bg-secondary/80 disabled:bg-secondary/60'
+                >
+                  {isSigningOut ? (
+                    <CgSpinnerAlt className='animate-spin' />
+                  ) : (
+                    <IoExitOutline />
+                  )}
+                  退出登录
+                </Button>
+              </HoverCardContent>
+            </HoverCard>
+          ) : (
+            <Button
+              variant={'secondary'}
+              className=''
+              onClick={() => setLoginOpen(true)}
+            >
+              登入<span aria-hidden='true'>&rarr;</span>
+            </Button>
+          )}
         </div>
       </nav>
 
@@ -77,7 +130,7 @@ export const Navigation = () => {
               <img
                 alt=''
                 src='https://tailwindui.com/plus/img/logos/mark.svg?color=indigo&shade=600'
-                className='h-8 w-auto'
+                className='h-10 w-auto'
               />
             </a>
             <button
@@ -102,16 +155,21 @@ export const Navigation = () => {
                   </a>
                 ))}
               </div>
+
               <div className='py-6'>
-                <Button
-                  onClick={() => {
-                    setMobileMenuOpen(false)
-                    setLoginOpen(true)
-                  }}
-                  className='w-full'
-                >
-                  登入
-                </Button>
+                {userProfile ? (
+                  <div>{userProfile.profile?.last}</div>
+                ) : (
+                  <Button
+                    onClick={() => {
+                      setMobileMenuOpen(false)
+                      setLoginOpen(true)
+                    }}
+                    className='w-full'
+                  >
+                    登入
+                  </Button>
+                )}
               </div>
             </div>
           </div>

@@ -1,8 +1,19 @@
+import { QueryData } from '@supabase/supabase-js'
 import { ClubGrid } from './club-grid'
+import { supabase } from '@/lib/supabase/server'
+import { ArrayElement } from '@/lib/utils'
 
-export default function Page() {
+const clubsQuery = supabase
+  .from('clubs')
+  .select('*, leaders:clubs_leaders(profile:profiles(*))')
+
+export type Club = ArrayElement<QueryData<typeof clubsQuery>>
+
+export default async function Page() {
+  const { data: clubsData } = await clubsQuery
+
   return (
-    <div>
+    <div className=''>
       <div className='px-6 pt-36 pb-16 lg:px-8'>
         <div className='mx-auto max-w-2xl text-center'>
           <p className='text-base/7 font-semibold text-indigo-600'>
@@ -17,9 +28,13 @@ export default function Page() {
         </div>
       </div>
 
-      <div className='flex justify-center'>
-        <ClubGrid />
-      </div>
+      {clubsData ? (
+        <div className='flex justify-center'>
+          <ClubGrid clubs={clubsData} />
+        </div>
+      ) : (
+        <div>No clubs found</div>
+      )}
     </div>
   )
 }
