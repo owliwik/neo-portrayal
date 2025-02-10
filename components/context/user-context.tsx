@@ -23,18 +23,23 @@ export const UserProvider = ({
 
   useEffect(() => {
     const { subscription } = auth.onAuthStateChange(async (event, session) => {
-      if (!session) {
-        setUserProfile(undefined)
-        return
+      const fetchSession = async () => {
+        console.log(1)
+        if (!session) {
+          setUserProfile(undefined)
+          return
+        }
+
+        const user = session.user
+        const { data: profile, error } = await db('profiles')
+          .select('*')
+          .eq('auth_id', user.id)
+          .maybeSingle()
+        setUserProfile({ user, profile: profile ?? undefined })
+        console.log(2)
       }
 
-      const user = session.user
-      const { data: profile, error } = await db('profiles')
-        .select('*')
-        .eq('auth_id', user.id)
-        .maybeSingle()
-
-      setUserProfile({ user, profile: profile ?? undefined })
+      fetchSession()
     }).data
 
     return () => subscription.unsubscribe()
