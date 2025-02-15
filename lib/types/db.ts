@@ -203,7 +203,7 @@ export type Database = {
         Row: {
           created_at: string
           id: string
-          metadata: Json | null
+          metadata: Json
           publisher: string
           title: string | null
           type_id: string
@@ -211,7 +211,7 @@ export type Database = {
         Insert: {
           created_at?: string
           id?: string
-          metadata?: Json | null
+          metadata: Json
           publisher: string
           title?: string | null
           type_id: string
@@ -219,7 +219,7 @@ export type Database = {
         Update: {
           created_at?: string
           id?: string
-          metadata?: Json | null
+          metadata?: Json
           publisher?: string
           title?: string | null
           type_id?: string

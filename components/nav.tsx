@@ -16,7 +16,7 @@ import { CgSpinnerAlt } from 'react-icons/cg'
 import Link from 'next/link'
 
 const navigation = [
-  { name: '资源', href: '#' },
+  { name: '资源', href: '/resources' },
   { name: '校友平台', href: '#' },
   { name: '社团', href: '/clubs' },
   { name: '关于', href: '#' },

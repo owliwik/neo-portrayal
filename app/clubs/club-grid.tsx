@@ -1,17 +1,14 @@
 'use client'
 
-import { Tables } from '@/lib/types/db'
 import { useState, useEffect } from 'react'
-import { auth, db } from '@/lib/supabase/client'
+import { ClubsQuery } from '@/app/api/clubs/route'
+import { QueryData } from '@supabase/supabase-js'
 
 import { Badge } from '@/components/ui/badge'
 import { ArrayElement, cn } from '@/lib/utils'
 import { ClubDialog } from './club-dialog'
-import { QueryData } from '@supabase/supabase-js'
 
-// Query used ONLY for Typescript definitions
-const clubsQuery = db('clubs').select('*, leaders:clubs_leaders(profile:profiles(id, last, first))')
-export type Club = ArrayElement<QueryData<typeof clubsQuery>>
+export type Club = ArrayElement<QueryData<ClubsQuery>>
 
 export const ClubGrid = () => {
   const [clubs, setClubs] = useState<Club[]>()

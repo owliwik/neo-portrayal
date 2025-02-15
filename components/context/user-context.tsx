@@ -24,7 +24,6 @@ export const UserProvider = ({
   useEffect(() => {
     const { subscription } = auth.onAuthStateChange(async (event, session) => {
       const fetchSession = async () => {
-        console.log(1)
         if (!session) {
           setUserProfile(undefined)
           return
@@ -36,7 +35,6 @@ export const UserProvider = ({
           .eq('auth_id', user.id)
           .maybeSingle()
         setUserProfile({ user, profile: profile ?? undefined })
-        console.log(2)
       }
 
       fetchSession()
