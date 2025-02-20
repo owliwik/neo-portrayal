@@ -154,6 +154,126 @@ export type Database = {
           },
         ]
       }
+      comments: {
+        Row: {
+          author: string | null
+          content: string
+          created_at: string
+          id: string
+          parent_id: string | null
+          post_id: string
+        }
+        Insert: {
+          author?: string | null
+          content: string
+          created_at?: string
+          id?: string
+          parent_id?: string | null
+          post_id: string
+        }
+        Update: {
+          author?: string | null
+          content?: string
+          created_at?: string
+          id?: string
+          parent_id?: string | null
+          post_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "replies_author_fkey"
+            columns: ["author"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "replies_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "comments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "replies_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      events: {
+        Row: {
+          content: string
+          created_at: string
+          creator_id: string
+          id: string
+          time: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          creator_id: string
+          id?: string
+          time: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          creator_id?: string
+          id?: string
+          time?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "events_creator_id_fkey"
+            columns: ["creator_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      posts: {
+        Row: {
+          author_id: string
+          content: string
+          created_at: string
+          id: string
+          space_id: string
+        }
+        Insert: {
+          author_id: string
+          content: string
+          created_at?: string
+          id?: string
+          space_id: string
+        }
+        Update: {
+          author_id?: string
+          content?: string
+          created_at?: string
+          id?: string
+          space_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "posts_author_id_fkey"
+            columns: ["author_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "posts_space_id_fkey"
+            columns: ["space_id"]
+            isOneToOne: false
+            referencedRelation: "spaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           alt_first: string | null
@@ -181,21 +301,39 @@ export type Database = {
         }
         Relationships: []
       }
-      resource_types: {
+      resource_docs: {
         Row: {
-          description: string | null
+          created_at: string
           id: string
-          type_name: string
+          name: string
+          url: string
         }
         Insert: {
-          description?: string | null
-          id: string
-          type_name: string
+          created_at?: string
+          id?: string
+          name: string
+          url: string
         }
         Update: {
-          description?: string | null
+          created_at?: string
           id?: string
-          type_name?: string
+          name?: string
+          url?: string
+        }
+        Relationships: []
+      }
+      resource_types: {
+        Row: {
+          id: string
+          name: string
+        }
+        Insert: {
+          id?: string
+          name: string
+        }
+        Update: {
+          id?: string
+          name?: string
         }
         Relationships: []
       }
@@ -203,26 +341,23 @@ export type Database = {
         Row: {
           created_at: string
           id: string
-          metadata: Json
           publisher: string
-          title: string | null
-          type_id: string
+          title: string
+          type_id: string | null
         }
         Insert: {
           created_at?: string
           id?: string
-          metadata: Json
           publisher: string
-          title?: string | null
-          type_id: string
+          title: string
+          type_id?: string | null
         }
         Update: {
           created_at?: string
           id?: string
-          metadata?: Json
           publisher?: string
-          title?: string | null
-          type_id?: string
+          title?: string
+          type_id?: string | null
         }
         Relationships: [
           {
@@ -240,6 +375,27 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      spaces: {
+        Row: {
+          created_at: string
+          description: string
+          id: string
+          name: string
+        }
+        Insert: {
+          created_at?: string
+          description: string
+          id?: string
+          name: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          id?: string
+          name?: string
+        }
+        Relationships: []
       }
     }
     Views: {

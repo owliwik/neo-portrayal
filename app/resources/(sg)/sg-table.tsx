@@ -51,8 +51,8 @@ export function StudyGuideTable() {
       <TableBody>
         {studyGuides && studyGuides.map((sg) => (
           <TableRow key={sg.id}>
-            <TableCell>{sg.metadata.name}</TableCell>
-            <TableCell>{sg.metadata.authors.join(' ')}</TableCell>
+            <TableCell>{sg.metadata}</TableCell>
+            <TableCell>{sg.metadata?.authors.join(' ')}</TableCell>
             <TableCell>
               <Button variant={'outline'} size='sm'>
                 Download

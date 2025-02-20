@@ -1,14 +1,20 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { ClubsQuery } from '@/app/api/clubs/route'
+import { db } from '@/lib/supabase/client'
+import { Tables } from '@/lib/types/db'
 import { QueryData } from '@supabase/supabase-js'
 
 import { Badge } from '@/components/ui/badge'
 import { ArrayElement, cn } from '@/lib/utils'
 import { ClubDialog } from './club-dialog'
 
-export type Club = ArrayElement<QueryData<ClubsQuery>>
+const clubsQuery = db('clubs').select('*, leaders:clubs_leaders(profile_id)')
+
+export interface Club
+  extends Omit<ArrayElement<QueryData<typeof clubsQuery>>, 'leaders'> {
+  leaders: Tables<'profiles'>[]
+}
 
 export const ClubGrid = () => {
   const [clubs, setClubs] = useState<Club[]>()
@@ -17,11 +23,33 @@ export const ClubGrid = () => {
 
   useEffect(() => {
     const fetchClubs = async () => {
-      const res = await fetch('/api/clubs')
-      const data = await res.json()
-      if (data) {
-        setClubs(data)
+      const { data, error } = await clubsQuery
+      if (error) {
+        console.log(error.message)
+        return
       }
+
+      const ids: string[] = []
+      for (let c of data) {
+        for (let l of c.leaders) {
+          ids.push(l.profile_id)
+        }
+      }
+
+      const res = await fetch('/api/profiles', {
+        method: 'POST',
+        body: JSON.stringify({ columns: ['id', 'first', 'last'], ids }),
+      })
+      const profileData: Tables<'profiles'>[] = await res.json()
+
+      const clubList = data.map((c) => ({
+        ...c,
+        leaders: c.leaders.map((l) =>
+          profileData.find((profile) => profile.id === l.profile_id)!
+        ),
+      }))
+
+      setClubs(clubList)
     }
 
     fetchClubs()
@@ -71,8 +99,8 @@ export const ClubGrid = () => {
                 <h3 className='mt-2 text-sm text-gray-600'>
                   {club.leaders
                     .map(
-                      ({ profile }) =>
-                        (profile.last || '') + profile.first || ''
+                      (leader) =>
+                        (leader.last || '') + leader.first || ''
                     )
                     .join(' ')}
                 </h3>

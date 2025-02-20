@@ -8,3 +8,4 @@ const supabase = createBrowserClient<Database>(
 
 export const auth = supabase.auth
 export const db = supabase.from.bind(supabase)
+export const storage = supabase.storage
