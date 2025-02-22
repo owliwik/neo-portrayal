@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, createContext, ReactNode } from 'react'
+import { useState, useEffect, createContext, ReactNode, useRef } from 'react'
 import { User } from '@supabase/supabase-js'
 import { Tables } from '@/lib/types/db'
 import { auth, db } from '@/lib/supabase/client'
@@ -34,7 +34,9 @@ export const UserProvider = ({
           .select('*')
           .eq('auth_id', user.id)
           .maybeSingle()
-        setUserProfile({ user, profile: profile ?? undefined })
+
+        const updatedProfile = { user, profile: profile ?? undefined }
+        setUserProfile(updatedProfile)
       }
 
       fetchSession()

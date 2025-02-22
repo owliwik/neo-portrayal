@@ -2,6 +2,10 @@
 
 import { useState } from 'react'
 import { useUser } from '@/lib/hooks/use-user'
+import { auth } from '@/lib/supabase/client'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import { cn } from '@/lib/utils'
 
 import { Dialog, DialogPanel } from '@headlessui/react'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
@@ -11,13 +15,12 @@ import { Avatar, AvatarImage, AvatarFallback } from './ui/avatar'
 import { HoverCard, HoverCardContent, HoverCardTrigger } from './ui/hover-card'
 import { IoExitOutline } from 'react-icons/io5'
 import { Separator } from './ui/separator'
-import { auth } from '@/lib/supabase/client'
 import { CgSpinnerAlt } from 'react-icons/cg'
-import Link from 'next/link'
+import { toast } from 'sonner'
 
 const navigation = [
   { name: '资源', href: '/resources' },
-  { name: '校友平台', href: '#' },
+  { name: '校友平台', href: 'https://alumni.icportrayal.com' },
   { name: '社团', href: '/clubs' },
   { name: '关于', href: '#' },
 ]
@@ -28,12 +31,22 @@ export const Navigation = () => {
   const [isSigningOut, setSigningOut] = useState(false)
 
   const userProfile = useUser()
+  const pathName = usePathname()
+
+  const onSignOut = async () => {
+    setSigningOut(true)
+
+    await auth.signOut()
+    setSigningOut(false)
+
+    toast.warning('退出登录成功')
+  }
 
   return (
-    <header className='absolute inset-x-0 top-0 z-50'>
+    <header className='bg-white/80'>
       <LoginPopup open={loginOpen} setOpen={setLoginOpen} />
 
-      <nav className='flex items-center justify-between px-20 py-4'>
+      <nav className='flex items-center justify-between px-20 py-3'>
         <div className='flex md:flex-1'>
           <Link href='/' className='-m-1.5 p-1.5'>
             <span className='sr-only'>Your Company</span>
@@ -52,12 +65,15 @@ export const Navigation = () => {
           </button>
         </div>
 
-        <div className='hidden md:flex md:gap-x-12'>
+        <div className='hidden md:flex md:gap-x-10'>
           {navigation.map((item) => (
             <Link
               key={item.name}
               href={item.href}
-              className='text-md font-semibold text-gray-900'
+              className={cn(
+                'text-md px-3 py-1 rounded-full font-semibold text-gray-800',
+                pathName === item.href && 'text-primary-foreground bg-primary-1'
+              )}
             >
               {item.name}
             </Link>
@@ -91,11 +107,7 @@ export const Navigation = () => {
                   variant={'ghost'}
                   size={'sm'}
                   disabled={isSigningOut}
-                  onClick={async () => {
-                    setSigningOut(true)
-                    await auth.signOut()
-                    setSigningOut(false)
-                  }}
+                  onClick={onSignOut}
                   className='text-secondary-foreground/80 hover:text-secondary-foreground hover:bg-secondary/80 disabled:bg-secondary/60'
                 >
                   {isSigningOut ? (
@@ -108,13 +120,19 @@ export const Navigation = () => {
               </HoverCardContent>
             </HoverCard>
           ) : (
-            <Button
-              variant={'secondary'}
-              className=''
-              onClick={() => setLoginOpen(true)}
-            >
-              登入<span aria-hidden='true'>&rarr;</span>
-            </Button>
+            <div className='flex gap-2'>
+              <Link href={'/register'}>
+                <Button variant={'outline'}>注册</Button>
+              </Link>
+
+              <Button
+                variant={'secondary'}
+                className=''
+                onClick={() => setLoginOpen(true)}
+              >
+                登入<span aria-hidden='true'>&rarr;</span>
+              </Button>
+            </div>
           )}
         </div>
       </nav>
@@ -135,26 +153,26 @@ export const Navigation = () => {
                 className='h-10 w-auto'
               />
             </Link>
-            <button
-              type='button'
+            <Button
+              size='icon'
+              variant='ghost'
               onClick={() => setMobileMenuOpen(false)}
-              className='-m-2.5 rounded-md p-2.5 text-gray-700'
             >
               <span className='sr-only'>Close menu</span>
               <XMarkIcon aria-hidden='true' className='size-6' />
-            </button>
+            </Button>
           </div>
           <div className='mt-6 flow-root'>
             <div className='-my-6 divide-y divide-gray-500/10'>
               <div className='space-y-2 py-6'>
                 {navigation.map((item) => (
-                  <a
+                  <Link
                     key={item.name}
                     href={item.href}
                     className='-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50'
                   >
                     {item.name}
-                  </a>
+                  </Link>
                 ))}
               </div>
 
@@ -172,11 +190,7 @@ export const Navigation = () => {
                       variant={'secondary'}
                       size={'sm'}
                       disabled={isSigningOut}
-                      onClick={async () => {
-                        setSigningOut(true)
-                        await auth.signOut()
-                        setSigningOut(false)
-                      }}
+                      onClick={onSignOut}
                       className=''
                     >
                       {isSigningOut ? (
@@ -188,15 +202,33 @@ export const Navigation = () => {
                     </Button>
                   </div>
                 ) : (
-                  <Button
-                    onClick={() => {
-                      setMobileMenuOpen(false)
-                      setLoginOpen(true)
-                    }}
-                    className='w-full'
+                  <div
+                    className='flex gap-2'
                   >
-                    登入
-                  </Button>
+                    <Link href={'/register'} className='w-full'>
+                      <Button
+                        variant={'outline'}
+                        className='w-full'
+                        onClick={() => {
+                          setMobileMenuOpen(false)
+                          setLoginOpen(true)
+                        }}
+                      >
+                        注册
+                      </Button>
+                    </Link>
+
+                    <Button
+                      className='w-full'
+                      variant='secondary'
+                      onClick={() => {
+                        setMobileMenuOpen(false)
+                        setLoginOpen(true)
+                      }}
+                    >
+                      登入
+                    </Button>
+                  </div>
                 )}
               </div>
             </div>
