@@ -41,7 +41,7 @@ export const LoginPopup = ({ open, setOpen, onSuccess }: LoginPopupProps) => {
     toast.success(`Hi👋 ${fullName && fullName + ', '}`, {
       description: '欢迎来到IC Portrayal!',
     })
-    
+
     reset({}, { keepIsSubmitted: false })
   }, [isSubmitSuccessful, userProfile])
 
@@ -69,7 +69,7 @@ export const LoginPopup = ({ open, setOpen, onSuccess }: LoginPopupProps) => {
         <DialogTitle>登录到Portrayal</DialogTitle>
       </VisuallyHidden>
 
-      <DialogContent className='w-[20rem] sm:w-[24rem] py-12 px-6 sm:px-12'>
+      <DialogContent className='w-[22rem] py-12 px-12'>
         <div className='mx-auto'>
           <img
             alt='IC Portrayal Logo'
@@ -103,7 +103,7 @@ export const LoginPopup = ({ open, setOpen, onSuccess }: LoginPopupProps) => {
                 密码
               </label>
               <div className='text-sm'>
-                <a href='#' className='link'>
+                <a href='/forgot' className='link'>
                   忘记了密码？
                 </a>
               </div>
