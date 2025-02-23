@@ -76,7 +76,7 @@ export const ClubGrid = () => {
                   setCurrentClub(club)
                   setDialogOpened(true)
                 }}
-                className='w-[15rem] divide-gray-200 rounded-lg bg-white text-center cursor-pointer shadow hover:shadow-lg transition-all'
+                className='w-[15rem] divide-gray-200 rounded-lg bg-white text-center cursor-pointer shadow-sm hover:shadow-lg transition-all'
               >
                 <div className='relative flex flex-col items-center p-8'>
                   <Badge
