@@ -277,27 +277,33 @@ export type Database = {
       profiles: {
         Row: {
           alt_first: string | null
+          alt_last: string | null
           auth_id: string | null
           created_at: string
           first: string | null
           id: string
           last: string | null
+          student_id: string | null
         }
         Insert: {
           alt_first?: string | null
+          alt_last?: string | null
           auth_id?: string | null
           created_at?: string
           first?: string | null
           id?: string
           last?: string | null
+          student_id?: string | null
         }
         Update: {
           alt_first?: string | null
+          alt_last?: string | null
           auth_id?: string | null
           created_at?: string
           first?: string | null
           id?: string
           last?: string | null
+          student_id?: string | null
         }
         Relationships: []
       }

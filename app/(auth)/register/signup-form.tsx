@@ -168,7 +168,7 @@ export function SignUpForm() {
                 <div className='w-full flex justify-center text-slate-500'>
                   已经有账号了？
                   <a
-                    className='link text-blue-600 cursor-pointer'
+                    className='link text-blue-600'
                     onClick={() => setLoginOpen(true)}
                   >
                     立即登录

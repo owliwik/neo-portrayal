@@ -34,7 +34,7 @@ export default async function RootLayout({
   return (
     <html lang='en'>
       <body className={`font-sans antialiased`}>
-        <div className='wrapper h-1 min-h-[100vh] relative flex flex-col'>
+        <div className='remove-scrollbar-shift h-1 min-h-[100vh] relative flex flex-col'>
           <UserProvider init={userProfile}>
             <Navigation />
             <main className='flex-1'>{children}</main>

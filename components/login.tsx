@@ -76,7 +76,7 @@ export const LoginPopup = ({ open, setOpen, onSuccess }: LoginPopupProps) => {
             src='/icportrayal.png'
             className='mx-auto h-10 w-auto'
           />
-          <h2 className='mt-4 sm:mb-2 text-center text-2xl/9 font-bold tracking-tight text-gray-900'>
+          <h2 className='mt-4 text-center text-2xl/9 font-bold tracking-tight text-gray-900'>
             登录到Portrayal 🥸
           </h2>
         </div>

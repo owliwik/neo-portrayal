@@ -18,9 +18,14 @@ import {
   CardContent,
   CardFooter,
 } from '@/components/ui/card'
+import { CgSpinnerAlt } from 'react-icons/cg'
 
 export function ForgotForm() {
-  const { register, handleSubmit } = useForm<ForgotData>({
+  const {
+    register,
+    handleSubmit,
+    formState: { isSubmitting },
+  } = useForm<ForgotData>({
     resolver: zodResolver(forgotSchema),
   })
 
@@ -60,7 +65,13 @@ export function ForgotForm() {
           </div>
         </CardContent>
         <CardFooter>
-          <Button className='w-full'>提交申请</Button>
+          <Button disabled={isSubmitting} className='w-full'>
+            {isSubmitting ? (
+              <CgSpinnerAlt className='animate-spin' />
+            ) : (
+              <div>提交申请</div>
+            )}
+          </Button>
         </CardFooter>
       </form>
     </Card>

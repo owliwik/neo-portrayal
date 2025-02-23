@@ -93,7 +93,7 @@ export function ResetForm() {
 
       <form onSubmit={handleSubmit(onSubmit)}>
         <CardContent>
-          <div className='space-y-1'>
+          <div className='space-y-10'>
             <Label>验证码</Label>
             <FormField
               control={control}
