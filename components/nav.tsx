@@ -273,7 +273,7 @@ export const Navigation = () => {
                 onClose={() => {
                   setShowBanner(false)
                 }}
-                className='text-slate-50 absolute inset-x-0 z-10'
+                className='text-slate-50 absolute inset-x-0 z-10 rounded-t-none'
               >
                 <div className=''>获得完整体验，快来完善你的账户信息！</div>
                 <a
