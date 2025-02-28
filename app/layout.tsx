@@ -22,14 +22,14 @@ export default async function RootLayout({
     data: { user },
     error: userError,
   } = await supabaseSSR.auth.getUser()
-  // const { data: profile, error: profileError } = await supabaseSSR
-  //   .from('profiles')
-  //   .select('*')
-  //   .eq('auth_id', user?.id ?? '')
-  //   .maybeSingle()
+  const { data: profile, error: profileError } = await supabaseSSR
+    .from('profiles')
+    .select('*')
+    .eq('auth_id', user?.id ?? '')
+    .maybeSingle()
 
   let userProfile =
-    user ? { user, profile: undefined } : undefined
+    user ? { user, profile: profile ?? undefined } : undefined
 
   return (
     <html lang='en'>

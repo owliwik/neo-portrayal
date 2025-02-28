@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useUser } from '@/lib/hooks/use-user'
 import { auth } from '@/lib/supabase/client'
 import Link from 'next/link'
@@ -23,7 +23,7 @@ import { RealNamePopup } from './real-name-popup'
 
 const navigation = [
   { name: '资源', href: '/resources' },
-  { name: '校友平台', href: 'https://alumni.icportrayal.com' },
+  { name: '校友平台', href: '/alumni' },
   { name: '社团', href: '/clubs' },
   { name: '关于', href: '#' },
 ]
@@ -37,6 +37,11 @@ export const Navigation = () => {
 
   const userProfile = useUser()
   const pathName = usePathname()
+
+  useEffect(() => {
+    console.log('PROFILE CHANGED')
+    console.log(userProfile?.profile)
+  }, [userProfile?.profile])
 
   const onSignOut = async () => {
     setSigningOut(true)
